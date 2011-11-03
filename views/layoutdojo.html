@@ -129,26 +129,23 @@
 	  <div class="ez-last ez-oh">
             <div class="ez-box" id="right_sidebar">
             {{block rightbar}}
-                {{=LABEL('Search by image name',_for="search")}}
-                {{=FORM(INPUT(_id='search', _name='search', _style="width:150px;",\
-                    _onkeyup="ajax('%s',['search/getnames'],'target');loader()" % URL('search')))}}
-                {{=SPAN('Loading...',_id='loading',_style="display:none;")}}
-                {{=DIV(_id="target")}}
+
+
             {{end}}
 
 
-<script type="text/javascript">
+          <script type="text/javascript">
 
-    var srch = dojo.byId ("dojosearch");
-    dojo.connect(srch, "onchange", "readFile");
+              var srch = dojo.byId ("dojosearch");
+              dojo.connect(srch, "onchange", "readFile");
 
-</script>
+          </script>
 
         <b>Dojo Search</b>
-        <input dojoType="dijit.form.TextBox" name="dojosearch" value="Search By Name"
+        <input dojoType="dijit.form.TextBox" name="dojosearch" value="Find"
         trim="true" id="dojosearch" propercase="true">
     
-            </div>
+            </div>    <!-- Right Sidebar -->
 	  </div>
 	</div>
 	<div class="ez-box" id="footer">
