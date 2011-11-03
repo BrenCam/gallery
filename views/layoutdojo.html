@@ -12,6 +12,9 @@
     <!-- include dogo libs & local stylesheets-->  
     {{response.files.append(URL(request.application,'static','style.css'))}}
     {{response.files.append(URL(request.application,'static','demo.css'))}}
+
+   {{response.files.append(URL(request.application,'static','gallery.css'))}}
+
   
     
     {{#------  require CSS and JS files for this page (read info in base.css) ------}}
@@ -70,14 +73,14 @@
         load: function(response, ioArgs) { //
 		      // Search for the HTML tag with the ID "replace" and replace it with the answer of 
 		      // of the server call
-          dojo.byId("replace").innerHTML = response; // 
+          dojo.byId("reslist").innerHTML = response; // 
           return response; // 
         },
 
         // The ERROR function will be called in an error case.
         error: function(response, ioArgs) { // 
           console.error("HTTP status code: ", ioArgs.xhr.status); //
-          dojo.byId("replace").innerHTML = 'Loading the resource from the server did not work'; //  
+          dojo.byId("reslist").innerHTML = 'Loading the resource from the server did not work'; //  
           return response; // 
           },
           
@@ -123,7 +126,7 @@
             <div class="ez-box" id="content">{{include}}</div>
 
 <!--This is the tag which will be replaced by the AJAX call  -->
-<div id="replace" style="font-size: big"></div>
+<div id="reslist" style=""></div>
 
 	  </div>
 	  <div class="ez-last ez-oh">

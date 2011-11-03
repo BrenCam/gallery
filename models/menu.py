@@ -29,7 +29,8 @@ response.menu += [
     (T('Gallery - CSS'), False, URL('default','showcss'), []),
     (T('Gallery - JQuery'), False, URL('default','showjq'), []),
     (T('Gallery - Dojo'), False, URL('default','index'), []),
-    (T('AjaxSearch - Dojo'), False, URL('default','sendform'), [])
+    (T('AjaxSearch - Dojo'), False, URL('default','sendform'), []),
+    (T('Admin'), False, URL('admin','default','index'), [])
 
     ]
 

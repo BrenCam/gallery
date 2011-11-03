@@ -21,8 +21,41 @@ def getnames():
 #    print '***************   html **********' html
   
     r = images[0]
-    # return image and title as link
-    return XML(DIV(LI(IMG(_src=URL('default','download', args= r.file), _alt="", _width="120",  _height="100"), A(r.title, _href=URL('default','show',args=r.id)))))
+
+    # return image and title for all matches
+    #return XML(DIV(LI(*[IMG(_src=URL('default','download', args= r.file), _width="120", _height="100" ) for r in images])))
+
+    #s = "<div class='myclass'>"
+    #s =""
+    s = "<ul id='albumlist'>"
+    for r in images:
+        print  s
+        s += LI(IMG(_src=URL('default','download', args= r.file), _width="120", _height="100"  ), A(r.title, _href=URL('default','show',args=r.id))).xml()
+        #s +=  ', '
+        #s += A(r.title, _href=URL('default','show',args=r.id)).xml()
+    s += "</UL>"
+    print s
+    return XML(s)
+
+#    return XML(UL(LI([IMG(_src=URL('default','download', args= r.file), _width="120", _height="100" ) \
+#    for r in images])))
+
+    # working 
+    #return XML(DIV(LI(*[IMG(_src=URL('default','download', args= r.file), _width="120", _height="100" ) \
+    #for r in images])))
+
+
+
+# A(r.title, _href=URL('default','show',args=r.id)))))
+
+
+    # return image and title as link  - one image
+    #return XML(DIV(LI(IMG(_src=URL('default','download', args= r.file), _alt="", _width="120",  _height="100"), A(r.title, _href=URL('default','show',args=r.id)))))
+
+
+
+
+
 
 #    return XML( A(IMG(_src=URL('default','download', args= r.file), _alt="", _width="120",  _height="100"), _href=URL('default','index')))
 
