@@ -1,0 +1,17 @@
+{{left_sidebar_enabled=right_sidebar_enabled=False}}
+{{extend 'layout.html'}}
+
+
+<h2> JQuery Image Carousel View </h2>
+
+<h3> Found {{=len(images) }} Images </h3>
+
+{{for image in images:}}
+
+{{=LI(A(image.title, _href=URL("show", args=image.id)))}}
+<img  height=100px width=100px class="gallery" src="{{=URL('download', args=image.file)}}" />
+<br/>
+<p/>
+{{pass}}
+
+

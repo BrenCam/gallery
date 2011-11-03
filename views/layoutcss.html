@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{=T.accepted_language or 'en'}}">
+  <head>
+    <title>{{=response.title or request.application}}</title>
+    
+    <link rel="shortcut icon"
+	  href="{{=URL(request.application,'static','favicon.ico')}}" 
+	  type="image/vnd.microsoft.icon">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    {{#------  require CSS and JS files for this page (read info in base.css) ------}}
+    
+    
+      {{response.files.append(URL(request.application,'static','base.css'))}}
+  
+
+    {{response.files.append(URL(request.application,'static','superfish.js'))}}
+    
+    
+    
+    {{#------ include web2py specific js code (jquery, calendar, form stuff) ------}}
+    {{include 'web2py_ajax.html'}}
+    
+    
+    
+    
+     {{response.files.append(URL(request.application,'static','gallery.css'))}}
+ 
+ <style type="text/css"  >  
+     
+#albumlist {
+  list-style-type: none;
+}
+#albumlist li {
+  float: left;
+  width:120px;
+  margin-right: 15px;
+  margin-bottom: 10px;
+  font: bold 0.8em Arial, Helvetica, sans-serif;
+  color: #333333;
+}
+
+#albumlist img {
+  float: left;  
+  display: inline;
+  border: 3px solid #333300;
+}     
+     
+</style>
+          
+  </head>
+  <body>	 
+      <div id="content">{{include}}</div>	  	 	  
+  </body>
+</html>

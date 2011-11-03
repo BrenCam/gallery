@@ -1,0 +1,19 @@
+{{left_sidebar_enabled=right_sidebar_enabled=False}}
+{{extend 'layout.html'}}
+
+
+<h2> CSS Image Gallery (tableless design) </h2>
+
+<h3> Found {{=len(images) }} Images </h3>
+
+<!-- Define div for css layout --> 
+
+<ul id="albumlist">
+
+{{for image in images:}}
+<li><img  src="{{=URL('download', args=image.file)}}" width="120"  height="100" />{{=A(image.title, _href=URL("show", args=image.id))}}
+</li>
+
+{{pass}}
+</ul>
+

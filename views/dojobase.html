@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{=T.accepted_language or 'en'}}">
+  <head>
+    <title>Dojo Test</title>
+ 
+   <!-- Don't forget the semicolon below - else no error; no warning '-->
+   <!-- And spell 'dijit' correctly - it's *NOT* 'digit'-->
+
+<style type="text/css">
+    @import "{{=URL(request.application,'static', 'dojoroot/dijit/themes/tundra/tundra.css')}}";
+    @import "{{=URL(request.application,'static', 'dojoroot/dijit/themes/claro/claro.css')}}";
+    @import "{{=URL(request.application,'static', 'dojoroot/dojo/resources/dojo.css')}}"; 
+</style>      
+     
+     <!-- Define local dojo code access -->
+      <script type="text/javascript"  
+       src="{{=URL(request.application,'static', 'dojoroot/dojo/dojo.js')}}" 
+       djConfig="parseOnLoad: true" >
+      </script>
+     <!-- Define local dojo code access -->  
+
+  <script  type="text/javascript" >
+    dojo.require("dijit.form.TextBox");
+    dojo.require("dijit.form.NumberSpinner");
+    dojo.require("dijit.Tooltip");
+
+  </script>
+
+<!-- works >
+        <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js"
+        djConfig="parseOnLoad: true">
+        </script>
+        <script type="text/javascript">
+            dojo.require("dijit.form.TextBox");
+        </script>
+        <script type="text/javascript">
+            dojo.require("dijit.form.NumberSpinner");
+        </script>
+-->
+
+<script>
+// The "xhrGet" method executing an HTTP GET
+// Call method in web2py to get matching names
+
+
+
+</script> 
+
+<script type="text/javascript">
+  function getlist() {
+        alert ("Get List of Image Files");
+}
+</script> 	 	   
+  
+<script type="text/javascript">
+    function readFile() { // 
+      dojo.xhrGet( { 
+        // The following URL must match that used to test the server.
+        //url: "http://www.jnerlich.de/servlets/ReturnParameters", 
+
+        // pass request to controller - ??why need to specify app name here ??
+        url: "/gallery/search/getnames",                
+        handleAs: "text",
+        timeout: 5000, // Time in milliseconds
+ 		
+        // The LOAD function will be called on a successful response.
+        load: function(response, ioArgs) { //
+		      // Search for the HTML tag with the ID "replace" and replace it with the answer of 
+		      // of the server call
+          dojo.byId("replace").innerHTML = response; // 
+          return response; // 
+        },
+
+        // The ERROR function will be called in an error case.
+        error: function(response, ioArgs) { // 
+          console.error("HTTP status code: ", ioArgs.xhr.status); //
+          dojo.byId("replace").innerHTML = 'Loading the resource from the server did not work'; //  
+          return response; // 
+          },
+          
+        // Here you put the parameters to the server side program 
+        // We send two hard-coded parameters
+        //var sval = dijit.byId("dojosearch").value;
+        //content: {q: "p" }
+        content: {q: dojo.byId("dojosearch").value }
+        //content: {q: "p" }        
+        //content.set({"q":sval})
+        });
+      }
+  </script>
+
+  </head>
+
+  <body class="tundra"">
+ 
+
+<script type="text/javascript">
+
+    var srch = dojo.byId ("dojosearch");
+    dojo.connect(srch, "onchange", "readFile");
+
+</script>
+
+
+        <b>Dojo Search</b>
+        <input dojoType="dijit.form.TextBox" name="dojosearch" value="Search By Name"
+        trim="true" id="dojosearch" propercase="true">
+
+        {{include}}
+
+<script type="text/javascript">
+    //dojo.addOnLoad(readFile); 
+  </script>
+</head>
+
+<body>
+
+<!--This is the tag which will be replaced by the AJAX call  -->
+<div id="replace" style="font-size: big"></div>
+
+</body>
+
+</html>

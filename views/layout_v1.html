@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="{{=T.accepted_language or 'en'}}">
+  <head>
+    <title>{{=response.title or request.application}}</title>
+    <link rel="shortcut icon"
+	  href="{{=URL(request.application,'static','favicon.ico')}}" 
+	  type="image/vnd.microsoft.icon" />
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      {{
+      #---- (CSS) -----)
+      import random
+      response.files.append(URL('static','css/menu.css'))
+      response.files.append(URL('static','css/home.css'))
+      
+      #------ include web2py specific js code (jquery, calendar, form stuff) ------
+      }}
+      {{include 'web2py_ajax.html'}}      
+      {{=toggle_menuclass()}}
+  <!-- script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20457543-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = t\
+rue;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '\
+.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+  })();
+  </script //-->
+  </head>
+  <body>
+    <div class="flashdiv">
+      <blockquote class="flash boxInfo">{{=response.flash or ''}}</blockquote>
+    </div>
+    <div class="general">
+      <!-- HEADER -->
+      <div class="headerExt">
+	<div class="headerInt">
+	  <a href="{{=URL('default','index')}}" class="logo"><em style="display:none;">web2py web framework</em></a>
+	  <div class="headermenu">
+            <a href="{{=URL('default','index')}}"
+	       class="home"><em style="display:none;">{{=T('Home')}}</em></a> 
+            <a href="{{=URL('default','what')}}"  
+	       class="about what"><em style="display:none;">{{=T('About This App')}}</em></a> 
+            <a href="{{=URL('default','download')}}"  
+	  </div>
+	</div>
+      </div>
+      
+      <!-- MAIN CONTENT -->
+      <div class="content">	  
+	
+	{{include}}
+	
+	{{block sidebar}}
+    	  
+          <!-- div class="boxSearch1">
+	       <div class="boxSearch2"></div>
+          </div ****uncomment to show search input***-->	         
+	
+	{{end}}
+      </div>
+      
+      <!-- RODAPE -->   
+      <div class="footerExt">
+	<div class="footerInt">
+    	  <!-- div class="Boxfooter1" id="font1">contact</div -->
+    	  <!-- div class="Boxfooter2" id="font1">mobile</div -->
+    	  <!-- div class="Boxfooter3" id="font1">&copy; 2011 by Massimo Di Pierro</div> -->
+    	  <!-- a href="" class="Boxfooter4"></a> <a href="" class="Boxfooter5"></a -->
+    	  <div class="Boxfooter6"></div>    	  
+  	</div>
+      </div>
+    </div>    
+  </body>
+</html>
+  
