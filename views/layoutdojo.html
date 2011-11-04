@@ -13,9 +13,7 @@
     {{response.files.append(URL(request.application,'static','style.css'))}}
     {{response.files.append(URL(request.application,'static','demo.css'))}}
 
-   {{response.files.append(URL(request.application,'static','gallery.css'))}}
-
-  
+    {{response.files.append(URL(request.application,'static','gallery.css'))}}
     
     {{#------  require CSS and JS files for this page (read info in base.css) ------}}
     {{response.files.append(URL(request.application,'static','base.css'))}}
@@ -44,7 +42,6 @@
 
   <script  type="text/javascript" >
     dojo.require("dijit.form.TextBox");
-    dojo.require("dijit.form.NumberSpinner");
   </script>
 
 <!-- load Dojo  from web -->

@@ -2,6 +2,56 @@
 import datetime
 
 def getnames():
+    sval =''
+    if  request.vars['q']:
+        sval = request.vars['q']
+
+        #queries with %LIKE% ****HERE BE THE DRAGONS!!!!******
+
+        images = db(db.image.title.like(sval+'%')).select()
+    else:
+        images = db(db.image.ALL).select()
+    # finally - got a working syntax - watch out for (mis) matching parens 
+    # combine IMG and A tags in generated XML that is passed to the view
+    # tricky syntax
+    # the LI [] structure below creates a list from the generator created by the inner for 
+    # !!GOTCHA!! - Assignment of params is position dependent - ???forum qn???
+    # Note the assignment of '_id' below needs to be at the end, not at the beginning
+    # ??Web2py documentation issue??
+
+    return XML( UL(*LI ([ (IMG (_src=URL('default','download', args= img.file), _width="120", _height="100"  ), A(img.title,_href=URL('default','show', args=img.id))) for img in images]) , _id='albumlist'))
+
+    # the LI [] structure below creates a list from the generator created by the inner for 
+    #return XML( UL(*LI ([ (IMG (_src=URL('default','download', args= img.file), _width="120", _height="100"  ), A(img.title,_href=URL('default','show', args=img.file))) for img in images])))
+    
+    
+def getnames_v2():
+    sval =''
+    if  request.vars['q']:
+        sval = request.vars['q']
+
+        #queries with %LIKE% ****HERE BE THE DRAGONS!!!!******
+
+        images = db(db.image.title.like(sval+'%')).select()
+    else:
+        images = db(db.image.ALL).select()
+    # finally - got a working syntax - watch out for (mis) matching parens 
+    # combine IMG and A tags in generated XML that is passed to the view
+    # tricky syntax
+    # the LI [] structure below creates a list from the generator created by the inner for 
+    s = "<ul id='albumlist'>"
+    for r in images:
+        print  s
+        s += LI(IMG(_src=URL('default','download', args= r.file), _width="120", _height="100"  ), A(r.title, _href=URL('default','show',args=r.id))).xml()
+        #s +=  ', '
+        #s += A(r.title, _href=URL('default','show',args=r.id)).xml()
+    s += "</UL>"
+    #print s
+    return XML(s)
+
+
+
+def zz_getnames():
     # for ajax search -  find list of images - match on search string
     # (need to return list in json format ??)
     print '*************  processing ajax request *********** at %s' %datetime.datetime.now().ctime()
@@ -34,8 +84,23 @@ def getnames():
         #s +=  ', '
         #s += A(r.title, _href=URL('default','show',args=r.id)).xml()
     s += "</UL>"
-    print s
-    return XML(s)
+    #print s
+
+    # finally - got a working syntax - watch out for (mis) matching parens 
+    # combine IMG and A tags in generated XML that is passed to the view
+    # tricky syntax
+    # the LI [] structure below creates a list from the generator created by the inner for 
+    return XML( UL(*LI ([ (IMG (_src=URL('default','download', args= img.file), _width="120", _height="100"  ), A(img.title,_href=URL('default','show', args=img.file))) for img in images])))
+    
+
+
+    #str = LI(IMG(_src=URL('default','download', args= r.file), _width="120", _height="100"  ), A(r.title, _href=URL('default','show',args=r.id)))
+    #print str.xml()
+
+#    return XML(LI(IMG(_src=URL('default','download', args= img.file), _width="120", _height="100"  ), A(r.title, _href=URL('default','show',args=img.id))) for img in images)
+    #return x
+
+    #return XML(s)
 
 #    return XML(UL(LI([IMG(_src=URL('default','download', args= r.file), _width="120", _height="100" ) \
 #    for r in images])))
@@ -51,10 +116,6 @@ def getnames():
 
     # return image and title as link  - one image
     #return XML(DIV(LI(IMG(_src=URL('default','download', args= r.file), _alt="", _width="120",  _height="100"), A(r.title, _href=URL('default','show',args=r.id)))))
-
-
-
-
 
 
 #    return XML( A(IMG(_src=URL('default','download', args= r.file), _alt="", _width="120",  _height="100"), _href=URL('default','index')))
