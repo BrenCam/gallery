@@ -1,0 +1,50 @@
+<script type="text/javascript">
+    function xmlgetTags() { // 
+      dojo.xhrGet( {  
+        url: "/gallery/search/xmlgettags",                
+        handleAs: "json",
+        timeout: 5000, // Time in milliseconds 		
+        // The LOAD function will be called on a successful response.
+        load: function(response, ioArgs) { //
+        return response; 
+        },
+
+        // The ERROR function will be called in an error case.
+        error: function(response, ioArgs) { // 
+          console.error("HTTP status code: ", ioArgs.xhr.status); //
+          dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
+          return response; // 
+          },
+          
+        // Here you put the parameters to the server side program 
+        //content: {q: dojo.byId("dojosearch").value }
+         });
+      }
+  </script>
+
+// old version
+<script type="text/javascript">
+var xhrArgsGetTags = {
+url : "/gallery/search/xmlgettags.json",
+preventCache : false,
+handleAs : "json",
+handle : function(response, ioargs) {
+     var message="";
+     switch (ioargs.xhr.status) {
+     case 200:
+         console.debug("server response: 200");
+         alert ('xhr response');
+         var id1=dojo.byId('imgtags');
+         dojo.forEach(response,function(item){
+             //alert('Item: ' + item);
+             dojo.create("option",{value:item.id,innerHTML:item.name},id1,"last");
+        })
+     break;
+    default:
+         console.debug("server response: "+ioargs.xhr.status);
+    }
+}
+};
+
+ </script>
+

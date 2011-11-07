@@ -31,11 +31,8 @@
 
 </script>
 
-<h1>Image: {{=image.title}}</h1>
-<center>
-<img height="400px"
-     src="{{=URL('download', args=image.file)}}" />
-</center>
+<!-- Define div for css layout --> 
+
 
 <h3>Assign Tags</h3>
 <select id="dynamic">
@@ -46,14 +43,16 @@
     </button>
 </p>
 
-{{if len(comments):}}
-  <h3>Comments</h3>
-  {{for comment in comments:}}
-    <li>{{=comment.author}} says <i>{{=comment.body}}</i></li>
-  {{pass}}
-{{else:}}
-  <h3>No comments posted yet</h3>
+<ul id="taglist">
+
+{{for tag in tags:}}
+
+<li>{{= tag.id}}, {{tag.name}}
+</li>
 {{pass}}
-<br/>
-<h3>Post a comment</h3>
-{{=form}}
+</ul>
+
+
+
+
+

@@ -61,64 +61,6 @@
     {{include 'web2py_ajax.html'}}
       
 
-<script type="text/javascript">
-    function readFile() { // 
-      dojo.xhrGet( { 
-        // The following URL must match that used to test the server.
-        //url: "http://www.jnerlich.de/servlets/ReturnParameters", 
-
-        // pass request to controller - ??why need to specify app name here ??
-        url: "/gallery/search/getnames",                
-        handleAs: "text",
-        timeout: 5000, // Time in milliseconds
- 		
-        // The LOAD function will be called on a successful response.
-        load: function(response, ioArgs) { //
-		    // Search for the HTML tag with the ID "replace" and replace it with the answer of 
-		    // of the server call
-        dojo.byId("content").innerHTML = response; // 
-
-        // Add a dom element with results
-        //dojo.create('h1',innerHTML ='testtest', content );
-
-        var cnt = dojo.query('#albumlist img').length
-        dojo.create("h1", { 
-                innerHTML:  cnt + " Matching Image(s) Found"
-              }, albumlist, "before" );
-
-        return response; // 
-        },
-
-        // The ERROR function will be called in an error case.
-        error: function(response, ioArgs) { // 
-          console.error("HTTP status code: ", ioArgs.xhr.status); //
-          dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
-          return response; // 
-          },
-          
-        // Here you put the parameters to the server side program 
-        content: {q: dojo.byId("dojosearch").value }
-         });
-      }
-  </script>
-
-<script>
-
-  // allow for extension of addOnLoad in extended template
-  {{block addOnLoadBegin}}
-  dojo.addOnLoad(function() {
-              new dijit.Tooltip({
-                  connectId: 'dojosearch',
-                  label: "Search By Title!"
-               });
-  {{end}}
-
-  {{block addOnLoadEnd}}
-    });
-  {{end}}
-
-</script>
-
 </head>
 
     <body class=" claro ">
@@ -162,15 +104,11 @@
             <script type="text/javascript">
                 var srch = dojo.byId ("dojosearch");
                 //?? Collision with Dojo Multi Selection  ??
-                dojo.connect(srch, "onchange", "readFile");
+                //dojo.connect(srch, "onchange", "readFile");
                 //dojo.connect(srch, "onchange", "");
             </script>
 
 
-              <b>Search</b>              
-              <input dojoType="dijit.form.TextBox" name="dojosearch" value="Find"
-              trim="true" id="dojosearch" propercase="true" style="width: 6em">
- 
             </div>
 
           <div dojoType="dijit.layout.ContentPane" splitter="false" region="bottom" 

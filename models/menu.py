@@ -30,6 +30,8 @@ response.menu += [
     (T('Gallery - JQuery'), False, URL('default','showjq'), []),
     (T('Gallery - Dojo'), False, URL('default','index'), []),
     (T('AjaxSearch - Dojo'), False, URL('default','sendform'), []),
+    (T('TagList'), False, URL('search','gettags'), []),
+
     (T('Admin'), False, URL('admin','default','index'), [])
 
     ]

@@ -1,0 +1,18 @@
+{{left_sidebar_enabled=right_sidebar_enabled=False}}
+{{extend 'noajaxdijitlayout.html'}}
+
+
+<h3> Found {{=len(tags) }} Tags </h3>
+
+<!-- Define div for css layout --> 
+
+<ul id="taglist">
+
+{{for tag in tags:}}
+
+
+<li>{{= tag.id}}, {{tag.name}}
+</li>
+{{pass}}
+</ul>
+

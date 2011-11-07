@@ -10,7 +10,10 @@ def getnames():
 
         images = db(db.image.title.like(sval+'%')).select()
     else:
-        images = db(db.image.ALL).select()
+        #images = db(db.image.ALL).select()
+        images = db().select(db.image.ALL)
+
+
     # finally - got a working syntax - watch out for (mis) matching parens 
     # combine IMG and A tags in generated XML that is passed to the view
     # tricky syntax
@@ -25,6 +28,33 @@ def getnames():
     #return XML( UL(*LI ([ (IMG (_src=URL('default','download', args= img.file), _width="120", _height="100"  ), A(img.title,_href=URL('default','show', args=img.file))) for img in images])))
     
     
+def gettags():
+    # get list of tagnames from tag table
+    tags  = db().select(db.tag.id, db.tag.name)
+    #return XML(tags)
+    return dict(tags=tags)        
+ 
+def xmlgettags():
+    # get list of tagnames from tag table
+    # return in json format
+    tags  = db().select(db.tag.id, db.tag.name).as_list()
+    #return XML(tags)
+
+    #return dict(id='1', name='places')
+
+    return dict(taglist=tags)
+
+
+    #return dict(id='1', name='places')
+
+
+    #return dict(id=tags.id, name=tags.name)
+    #return dict(item=tags)
+    #return XML(tags)
+    #return tags
+
+    
+
 def getnames_v2():
     sval =''
     if  request.vars['q']:

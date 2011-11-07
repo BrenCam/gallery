@@ -1,10 +1,15 @@
 {{left_sidebar_enabled=right_sidebar_enabled=False}}
 {{extend 'dijitlayout.html'}}
 
-<h1>Current Image List</h1>
-<ul>
+<h1>Latest Images</h1>
+
+<!-- Define div for css layout --> 
+
+<ul id="albumlist">
+
 {{for image in images:}}
-{{=LI(A(image.title, _href=URL("show", args=image.id)))}}
+<li><img  src="{{=URL('download', args=image.file)}}" width="120"  height="100" />{{=A(image.title, _href=URL("show", args=image.id))}}
+</li>
+
 {{pass}}
 </ul>
-

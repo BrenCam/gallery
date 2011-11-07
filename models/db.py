@@ -96,3 +96,19 @@ db.comment.body.requires = IS_NOT_EMPTY()
 
 db.comment.image_id.writable = db.comment.image_id.readable = False
 
+# 11/6/2011 - Add tag + tagxref tables
+db.define_table('tag',
+   Field('name'),
+   Field('dscr'))
+
+# xref table
+db.define_table('tagref',
+   SQLField('image', db.image),
+   SQLField('tag',db.tag))
+
+
+
+
+
+
+

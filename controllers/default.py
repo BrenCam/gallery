@@ -25,6 +25,10 @@ def index():
 def sendform():
     return dict()
 
+def count():
+    session.counter = (session.counter or 0) + 1
+    return dict(counter=session.counter, now=request.now)
+
    
 def show_v0():
     # need to check for valid selection here

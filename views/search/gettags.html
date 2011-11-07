@@ -1,0 +1,70 @@
+{{left_sidebar_enabled=right_sidebar_enabled=False}}
+{{extend 'noajaxdijitlayout.html'}}
+
+<script type="text/javascript">
+    dojo.require("dijit.form.MultiSelect");
+    
+</script>
+<script type="text/javascript">
+    function xmlgetTags() {  
+      dojo.xhrGet( {  
+
+        url: "/gallery/search/xmlgettags.json",                
+        handleAs: "json",
+        timeout: 5000, // Time in milliseconds 		
+        // The LOAD function will be called on a successful response.
+        load: function(response, ioArgs) { //
+            //console.log(response);
+            //dojo.byId("content").innerHTML = response; //  
+            jsdata = response.taglist;
+
+            var id1=dojo.byId('imgtags');
+            dojo.forEach(jsdata,function(item){
+                 //alert('Item Found: ' + item.name);
+                 dojo.create("option",{value:item.id,innerHTML:item.name},id1,"last");  
+            })    
+          return response; 
+        },
+
+        // The ERROR function will be called in an error case.
+        error: function(response, ioArgs) { // 
+          console.error("HTTP status code: ", ioArgs.xhr.status); //
+          dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
+          return response; 
+        },
+          
+        // Here you put the parameters to the server side program 
+        //content: {q: dojo.byId("dojosearch").value }
+        });
+      }
+
+
+var reply1 = xmlgetTags();
+new dijit.form.MultiSelect({  name: 'tags'},sel);
+
+
+
+</script>
+
+
+<!-- Define div for css layout --> 
+<label for="imgtags"><strong>Image Tags</strong></label> <br>
+
+<select dojoType="dijit.form.MultiSelect" id="imgtags" name="imgtags" size="15">
+
+</select>
+
+
+<p>
+<!--    Specify the values selected-->
+
+    <button onClick="alert('You selected items :' + dijit.byId('imgtags').get('value') )">
+        Assign Selected values to Image
+    </button>
+</p>
+
+
+
+
+
+
