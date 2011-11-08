@@ -102,6 +102,8 @@ db.define_table('tag',
    Field('dscr'))
 
 # xref table
+# rename as image_id and tag_id - 11/8/2011
+
 db.define_table('tagref',
    SQLField('image', db.image),
    SQLField('tag',db.tag))

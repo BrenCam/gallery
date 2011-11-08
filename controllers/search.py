@@ -53,7 +53,53 @@ def xmlgettags():
     #return XML(tags)
     #return tags
 
-    
+
+def getimgtags():
+
+    '''
+    #    get tags associated with the selected image
+    #    expect ajax request; json response from show image page
+    #    rows = db(db.tagref.tag==db.tag.id)(db.tagref.image>=5)
+    #    .select(orderby=db.tagref.image)
+    '''
+
+    #   rows = db(db.tagref.tag==db.tag.id)(db.tagref.image>=5).select()
+    print '#### getimgtags #### '
+    #imgtags = db(db.tagref.tag==db.tag.id)(db.tagref.image==request.vars['q']).select()
+    imgtags = db(db.tagref.tag==db.tag.id)(db.tagref.image==request.vars['q']).select(db.tag.name)
+    return dict(imgtags=imgtags)
+
+
+
+def gettagsummary():
+    '''
+    Get list of tags and related counts (from tagref table) - user can then view by tag
+    (similar to Stack Overflow tag view??) 
+    '''
+    count = db.tagref.tag.count()
+    tagsummary = db(db.tagref.tag==db.tag.id).select(db.tagref.tag, db.tag.name, count, \
+                    groupby=db.tagref.tag)
+
+    rows =[]    
+    # build array of tuples, then cvt to json?
+    for r in tagsummary:
+        res=[]
+        res.append(('id',r.tagref.tag))
+        res.append(('name',r.tag.name))
+        res.append(('count',r[count]))
+        rows.append(res)
+
+    # passing too many data elements here to the view
+    return dict(tagsummary=tagsummary)
+    #return dict(tagsummary=rows)
+
+
+def gettagdlt():
+    '''
+        Return detail list of images matching selected tag
+    '''   
+    pass
+
 
 def getnames_v2():
     sval =''

@@ -23,6 +23,11 @@
       </script>
      <!-- Define local dojo code access -->  
 
+     <!-- Uri Parser Utility -->
+      <script type="text/javascript"  
+       src="{{=URL(request.application,'static', 'parseuri.js')}}" >
+      </script>
+
         <script type="text/javascript">
             dojo.require("dijit.layout.ContentPane");
             dojo.require("dijit.layout.BorderContainer");
@@ -60,6 +65,43 @@
 
     {{include 'web2py_ajax.html'}}
       
+
+<script type="text/javascript">
+    function gettagsummary() { // 
+        dojo.xhrGet( { 
+
+        url: "/gallery/search/gettagsummary.json",                
+        handleAs: "json",
+        timeout: 5000, // Time in milliseconds
+ 		
+        // The LOAD function will be called on a successful response.
+        load: function(response, ioArgs) { //
+        dojo.byId("tagsummary").innerHTML = ''; 
+
+
+        //process the response  
+        var itags = response.tagsummary; 
+        for (var x=0; x< itags.length; x++){
+            //var z= 2;            
+            dojo.byId("tagsummary").innerHTML += '<li>' + itags[x].tag.name +'; '  + itags[x]._extra['COUNT(tagref.tag)' ]+ '</li>';    
+        }
+        
+        return response;  
+        },
+
+        // The ERROR function will be called in an error case.
+        error: function(response, ioArgs) { // 
+          console.error("HTTP status code: ", ioArgs.xhr.status); //
+          dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
+          return response; // 
+          },
+          
+        // Here you put the parameters (if applicable) to the server side program 
+        //content: {q: param }
+         });
+      }
+  </script>
+
 
 <script type="text/javascript">
     function readFile() { // 
@@ -111,6 +153,8 @@
                   connectId: 'dojosearch',
                   label: "Search By Title!"
                });
+
+              gettagsummary();
   {{end}}
 
   {{block addOnLoadEnd}}
@@ -170,6 +214,12 @@
               <b>Search</b>              
               <input dojoType="dijit.form.TextBox" name="dojosearch" value="Find"
               trim="true" id="dojosearch" propercase="true" style="width: 6em">
+
+              <p/>
+              <b>Tag Summary</b>
+              <div id='tagsummary'>
+                                
+              </div>
  
             </div>
 

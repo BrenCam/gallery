@@ -1,0 +1,29 @@
+<script type="text/javascript">
+    function getimgtags() { // 
+        dojo.xhrGet( { 
+ 
+        url: "/gallery/search/getimgtags.json",                
+        handleAs: "json",
+        timeout: 5000, // Time in milliseconds
+ 		
+        // The LOAD function will be called on a successful response.
+        load: function(response, ioArgs) { //
+		    // Search for the HTML tag with the ID "ctags" and replace it with the answer of 
+		    // of the server call
+        //dojo.byId("ctags").innerHTML = response; // 
+        return response; // 
+        },
+
+        // The ERROR function will be called in an error case.
+        error: function(response, ioArgs) { // 
+          console.error("HTTP status code: ", ioArgs.xhr.status); //
+          dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
+          return response; // 
+          },
+          
+        // Here you put the parameters to the server side program 
+        // need to get from url 
+        content: {q: dojo.byId("dojosearch").value }
+         });
+      }
+  </script>
