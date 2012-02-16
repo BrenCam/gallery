@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr">
+
+<head>
+    <title>Dojo Test</title>
+
+     <!-- Local Dojo Reference -->
+    <script type="text/javascript"  
+       src="{{=URL(request.application,'static/dojoroot/dojo', 'dojo.js')}}" >
+    </script>
+
+    <!---->
+  <!--<script type="text/javascript" src="http://o.aolcdn.com/dojo/1.6/dojo/dojo.xd.js"-->
+            <!--djConfig="parseOnLoad: true"></script>-->
+            <!---->
+  <!--<link rel="stylesheet" type="text/css"-->
+         <!--href="http://o.aolcdn.com/dojo/1.6/dojo/resources/dojo.css" />-->
+  <!--<link rel="stylesheet" type="text/css"-->
+         <!--href="http://o.aolcdn.com/dojo/1.6/dijit/themes/tundra/tundra.css" />-->
+
+    <!-- Define local dojo code access - use symlink to point to real dojoroot dir-->
+<!--    <script type="text/javascript" src="dojoroot/dojo/dojo.js" djConfig="parseOnLoad: true" >-->
+<!--    </script>-->
+    <!-- Define local dojo code access -->
+
+    <style type="text/css">
+<!--        @import "{{=URL(request.application,'static/dojoroot/dojo/resources', 'dojo.css')}}" -->
+<!--        @import "{{=URL(request.application,'static/dojoroot/dojo/resources/dojo.css')}}" -->
+<!--        @import "{{=URL(request.application,'static/dojoroot/dijit/themes/tundra', 'tundra.css')}}" -->
+<!--        @import "./dojoroot/dijit/themes/tundra/tundra.css";-->
+<!--        @import "./dojoroot/dojo/resources/dojo.css";-->
+    </style>
+
+
+    <script  type="text/javascript" >
+  	    dojo.require("dijit.dijit");
+  
+            dojo.require("dijit.layout.ContentPane");
+            dojo.require("dijit.layout.BorderContainer");
+            dojo.require("dijit.form.TextBox");
+            dojo.require("dijit.form.CheckBox");
+            dojo.require("dijit.Tooltip");
+            dojo.require("dojo.NodeList-traverse"); 	    
+	    
+  </script>
+  
+    <!-- include dojo libs & local stylesheets-->     
+    {{response.files.append(URL(request.application,'static','style.css'))}}
+    {{response.files.append(URL(request.application,'static','demo.css'))}}    
+    {{response.files.append(URL(request.application,'static','gallery.css'))}}
+    {{response.files.append(URL(request.application,'static/dojoroot/dojo/resources','dojo.css'))}}
+<!--    mport "{{=URL(request.application,'static/dojoroot/dojo/resources', 'dojo.css')}}" -->
+ 
+     <!-- Uri Parser Utility -->
+    <script type="text/javascript"  
+       src="{{=URL(request.application,'static', 'parseuri.js')}}" >
+    </script>
+        
+
+
+<script type="text/javascript">
+	function gettagsummary() { // 
+	    dojo.xhrGet( { 
+    
+	    url: "/gallery/search/gettagsummary.json",                
+	    handleAs: "json",
+	    timeout: 5000, // Time in milliseconds
+		    
+	    // The LOAD function will be called on a successful response.
+	    load: function(response, ioArgs) { //
+	    dojo.byId("tagsummary").innerHTML = '';   
+    
+	    //process the response  
+	    var itags = response.tagsummary; 
+	    for (var x=0; x< itags.length; x++){
+		dojo.byId("tagsummary").innerHTML += '<li>' + itags[x].name +'; '  + itags[x].count + '</li>';    
+	    }
+     
+	    return response;  
+	    },
+    
+	    // The ERROR function will be called in an error case.
+	    error: function(response, ioArgs) { // 
+	      console.error("HTTP status code: ", ioArgs.xhr.status); //
+	      dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
+	      return response; // 
+	      },
+	      
+	     });
+	  }
+    </script>
+            
+<script type="text/javascript">
+    function getbyname() { // 
+      //alert ('getbyname');
+      dojo.xhrGet( { 
+        // get images matching specified search name
+        // pass request to controller - ??why need to specify app name here ??
+        url: "/gallery/search/getnames",                
+        handleAs: "text",
+        timeout: 5000, // Time in milliseconds 		
+        // The LOAD function will be called on a successful response.
+        load: function(response, ioArgs) { //
+		      // Search for the HTML tag with the ID "replace" and replace it with the answer of 
+		      // of the server call
+		      // ?? How to clear previous contents ?? 
+          //  using 'content' here will cause chkbox clicks to clear the page also
+          //  ?? not sure why this should happen ??
+          //dojo.byId("content").innerHTML = response; // 
+          
+          dojo.byId("reslist").innerHTML = response; // 
+          
+          return response; // 
+        },
+
+        // The ERROR function will be called in an error case.
+        error: function(response, ioArgs) { // 
+          console.error("HTTP status code: ", ioArgs.xhr.status); //
+          dojo.byId("reslist").innerHTML = 'Loading the resource from the server did not work'; //  
+          return response; // 
+          },
+          
+        // Here you put the parameters to the server side program 
+        content: {q: dojo.byId("djsearch").value }
+         });
+      }
+      
+  </script>
+  
+  <script>      
+      dojo.addOnLoad(function() {
+		    gettagsummary();
+
+		    // Connection s/b in 'addOnLoad' to work correctly
+		    var srch = dojo.byId ("djsearch");	  
+		    dojo.connect(srch, "onchange", "getbyname");		    
+    	});    
+  </script>   
+  
+</head>
+
+<body class="tundra">
+
+	<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="true"
+             liveSplitters="false" id="borderContainer" style="height:700px;width:1000px;border:solid 1px">
+    
+    <div dojoType="dijit.layout.ContentPane" splitter="false" region="leading"
+    style="width: 150px;">
+     
+			   <div  id="left_sidebar">
+<!--				{{block leftbar}}-->
+<!--				{{=MENU(response.menu,_class='sf-menu')}}-->
+<!--				{{end}}-->
+				
+				{{=MENU(response.menu,_class='sf-menu')}}
+				    
+			    </div>        
+    </div>
+    
+    <div dojoType="dijit.layout.ContentPane" splitter="false" region="center" id="content">    
+    {{include}}
+         <!--This is the tag which will be replaced by the AJAX call  -->
+         <div id="reslist" style=""></div>
+    </div>
+
+    <div dojoType="dijit.layout.ContentPane" splitter="false" region="right"
+    style="width: 150px;">   
+                               
+              <b>Dojo Search</b>              
+              <input dojoType="dijit.form.TextBox" name="dojosearch" value="Find"
+              trim="true" id="djsearch" propercase="true" style="width: 6em">
+              <p></p>
+	      
+              <b>Tag Summary</b>
+              <div id='tagsummary'></div>              
+    </div>
+       
+     <div dojoType="dijit.layout.ContentPane" splitter="false" region="bottom" 
+    style="height:35px;"  id="footer" >
+    {{=T('Copyright')}} &#169; 2011 -
+    {{=T('Powered by')}} <a href="http://www.web2py.com">web2py</a>
+    {{try:}}{{=auth.navbar(action=URL(request.application,'default','user'))}}{{except:pass}}
+    | {{=A('admin',_href=URL('admin','default','index'))}} |
+    </div>   
+   
+  </div>
+
+</body>
+</html>

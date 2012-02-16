@@ -1,0 +1,175 @@
+{{left_sidebar_enabled=right_sidebar_enabled=False}}
+{{extend 'dijitlayout.html'}}  
+
+<script type="text/javascript">
+
+  dojo.require("dijit.form.MultiSelect");
+  dojo.require("dijit.form.Button") ;
+  dojo.require("dijit.form.CheckBox") ;
+
+</script>
+
+<script language="JavaScript">
+    function getimgtags(param) { // 
+        dojo.xhrGet({ 
+
+        //alert ('make xhr request');
+ 
+        //url: "/gallery/search/getimgtags.json",                
+        //handleAs: "json",
+        
+        // this request gets xml response containing a 
+        // table of tag values and checkboxes
+        url: "/gallery/search/getimgtagsastable",                
+        handleAs: "text",
+        timeout: 5000, // Time in milliseconds
+ 		
+        // The LOAD function will be called on a successful response.
+        load: function(response, ioArgs) { //
+		    // Search for the HTML tag with the ID "ctags" and replace it with the answer of 
+		    // of the server call
+        dojo.byId("ctags").innerHTML = ''; 
+
+        //{"imgtags": [{"name": "USA"}, {"name": "Places"}]} 
+        var itags = response.imgtags; 
+        //for (var x=0; x< itags.length; x++){
+        //    dojo.byId("ctags").innerHTML +=  itags[x].name + '; ';    
+        //}
+
+        dojo.byId("ctags").innerHTML =  response;
+
+
+        // Create check box element inside table??
+        // <button dojoType="dijit.form.Button" onClick="populateData()" type="button">
+        //    Populate data
+        // </button>
+
+        //  { href: "foo.html", title: "Goto FOO!", innerHTML: "link" },
+
+        //dojo.create("button", null ,  'tagtable', 'after');       
+
+        //dojo.create("button", {dojoType:"dijit.form.Button", innerHTML: "TestButton" } ,  'tagtable', 'after'); 
+
+        //dojo.create("input", {dojoType:"dijit.form.CheckBox", type="checkbox" } ,  'tagtable', 'before'); 
+      
+
+        return response; // 
+        },
+
+        // The ERROR function will be called in an error case.
+        error: function(response, ioArgs) { // 
+          console.error("HTTP status code: ", ioArgs.xhr.status); //
+          dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
+          return response; // 
+          },
+          
+        // Here you put the parameters to the server side program 
+        // need to get from url 
+        //content: {q: dojo.byId("dojosearch").value }
+        //dummy value for testing
+
+        //var uri = "http://some.server.org/somecontext/?foo=bar&foo=bar2&bit=byte";
+        //var uri = location;        
+        //var query = uri.substring(uri.indexOf("?") + 1, uri.length);      
+        //var queryObject = dojo.queryToObject(query);
+
+        //var param = dojo.queryToObject(location.search.substr(1));
+        //content: {q: dojo.queryToObject(location.search.substr(1))}
+        content: {q: param }
+
+         });
+      }
+  </script>
+
+
+<script language="JavaScript">
+  function check(){
+    //# find all the checkbox elements
+    dojo.query('[type=\"checkbox\"]').forEach(function(node, index, arr){
+       //console.debug(node.innerHTML);
+       node.checked= true;
+       });
+  }
+
+  function uncheck(){
+    dojo.query('[type=\"checkbox\"]').forEach(function(node, index, arr){
+       //console.debug(node.innerHTML);
+       node.checked= false;
+    });
+  }
+
+</script>
+
+<script type="text/javascript">
+
+  dojo.addOnLoad(function() {
+
+	//Retrieve tags for current image
+	
+	//var uri = location.href;   
+	//var q = dojo.queryToObject(location.href.search.substr(1)) ;    
+	//var query = uri.substring(uri.indexOf("?") + 1, uri.length);      
+	//var queryObject = dojo.queryToObject(query);
+
+	 
+	parseUri.options.strictMode = true;
+	qobj = parseUri(location.href);
+	
+	getimgtags(qobj.file);
+
+
+	//dojo.connect(dijit.byId("button")),
+	//     'onClick', function(evt {
+	//      if (digit.byID('check').getValue(){
+	//    }                    
+       //      })
+
+    });
+    
+</script>
+
+<h1>Image: {{=image.title}}</h1>
+<center>
+<img height="400px"
+     src="{{=URL('download', args=image.file)}}" />
+</center>
+
+<form>
+<h3>Current Image Tags</h3>
+<div id='ctags'>
+</div>
+</form>
+<h3>Assign Tags</h3>
+    <input name="CheckAll" value="check all" 
+     onclick="check()" type="button"/>
+    <input name="CheckAll" value="uncheck all" 
+     onclick="uncheck()" type="button"/>
+    <input value="remove checked" type="submit"/>
+
+<button onclick="alert('Ouch!')" dojoType="dijit.form.Button">
+  Check All
+</button>
+
+<input  dojoType="dijit.form.CheckBox"
+        value = "Yes"
+        id = "check"/>
+</input>
+
+<button onclick="alert('Ouch!')" dojoType="dijit.form.Button">
+  Uncheck All
+</button>
+
+<button onclick="alert('Ouch!')" dojoType="dijit.form.Button">
+  Remove Checked
+</button>
+
+{{if len(comments):}}
+  <h3>Comments</h3>
+  {{for comment in comments:}}
+    <li>{{=comment.author}} says <i>{{=comment.body}}</i></li>
+  {{pass}}
+{{else:}}
+  <h3>No comments posted yet</h3>
+{{pass}}
+<br></br>
+

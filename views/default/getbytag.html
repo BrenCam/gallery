@@ -1,11 +1,10 @@
-{{extend 'dijitlayout.html'}}  
+{{left_sidebar_enabled=right_sidebar_enabled=False}}
+{{extend 'noajaxdijitlayout.html'}}
 
 <script type="text/javascript">
     dojo.require("dijit.form.MultiSelect");
-    dojo.require("dijit.form.Button") ;
-    dojo.require("dijit.form.CheckBox") ;
+    
 </script>
-
 <script type="text/javascript">
     function xmlgetTags() {  
       dojo.xhrGet( {  
@@ -43,6 +42,8 @@
 var reply1 = xmlgetTags();
 new dijit.form.MultiSelect({  name: 'tags'},sel);
 
+
+
 </script>
 
 
@@ -62,16 +63,7 @@ new dijit.form.MultiSelect({  name: 'tags'},sel);
     </button>
 </p>
 
-<input  dojoType="dijit.form.CheckBox"
-        value = "Yes"
-        type="checkbox"
-        id = "check"/>
-</input>
 
-<input  value = "Yes"
-        type="checkbox"
-        id = "check"/>
-</input>
 
 
 

@@ -1,0 +1,65 @@
+{{extend 'djbaselocal.html'}}
+
+<head>
+    <style type="text/css">
+        body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }
+    </style>
+
+    <script type="text/javascript">
+        dojo.require("dijit.form.FilteringSelect");
+        dojo.require("dijit.form.ComboBox");
+        dojo.require("dojo.data.ItemFileReadStore");
+    </script>
+
+</head>
+
+<body class=" claro ">
+
+<h3>Filter Select Test</h3>
+
+<div dojoType="dojo.data.ItemFileReadStore" jsId="tagStore"  url="/gallery/search/getjson.json">
+</div>
+
+<div dojoType="dojo.data.ItemFileReadStore" jsId="fruitStore"  url="/gallery/search/fruittest.json">
+</div>
+
+
+<input dojoType="dijit.form.ComboBox" id="fruitInput"   value="ora"
+          store='fruitStore' searchAttr='name' name="fruitlabel">
+
+
+<input dojoType="dijit.form.ComboBox" id="tagInput"   value="P"
+          store='tagStore' searchAttr='name' name="tagname" onChange="confirm">
+
+
+<!--alert(dijit.byId('stateSelect').get('value'))"-->
+
+
+
+<!-- NOTE: the following script tag is not intended for usage in real
+world!! it is part of the CodeGlass and you should just remove it when
+you use the code -->
+
+<script type="text/javascript">
+    function confirm() {
+      str = dijit.byId('tagInput').get('value');
+      alert ('Hi, you selected: '  + str) ;
+    };
+</script>
+
+
+<script type="text/javascript">
+    dojo.addOnLoad(function() {
+    });
+</script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+

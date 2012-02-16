@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    function getByName() { // 
+      dojo.xhrGet( { 
+        // Find images by name
+        // On return display thumbnails of matching images
+
+        // pass request to controller
+        url: "/gallery/search/getnames",                
+        handleAs: "text",
+        timeout: 5000, // Time in milliseconds
+ 		
+        // The LOAD function will be called on a successful response.
+        load: function(response, ioArgs) { //
+		    // Search for the HTML tag with the ID "replace" and replace it with the answer of 
+		    // of the server call
+        dojo.byId("content").innerHTML = response;  
+
+        // Get count of matching results - why does this not work
+        // var cnt = dojo.query('#albumlist img').length
+
+        return response; // 
+        },
+
+        // The ERROR function will be called in an error case.
+        error: function(response, ioArgs) { // 
+          console.error("HTTP status code: ", ioArgs.xhr.status); //
+          dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
+          return response; // 
+          },
+          
+        // Here you put the parameters to the server side program 
+        content: {q: dojo.byId("dojosearch").value }
+         });
+      }
+  </script>

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html dir="ltr">
     
-    <head>
+<head>
         <style type="text/css">
             body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }
         </style>
@@ -9,46 +9,47 @@
    <!-- local dojo install --> 
    <!-- Don't forget the semicolon below - else no error; no warning '-->
    <!-- And spell 'dijit' correctly - it's *NOT* 'digit'-->
-
-<style type="text/css">
-    @import "{{=URL(request.application,'static', 'dojoroot/dijit/themes/tundra/tundra.css')}}";
-    @import "{{=URL(request.application,'static', 'dojoroot/dijit/themes/claro/claro.css')}}";
-    @import "{{=URL(request.application,'static', 'dojoroot/dojo/resources/dojo.css')}}"; 
-</style>      
-     
-     <!-- Define local dojo code access -->
-      <script type="text/javascript"  
+    
+    <style type="text/css">
+	@import "{{=URL(request.application,'static', 'dojoroot/dijit/themes/tundra/tundra.css')}}";
+	@import "{{=URL(request.application,'static', 'dojoroot/dijit/themes/claro/claro.css')}}";
+	@import "{{=URL(request.application,'static', 'dojoroot/dojo/resources/dojo.css')}}"; 
+    </style>      
+	 
+    <!-- <!-- Define local dojo code access -->-->
+    <script type="text/javascript"  
        src="{{=URL(request.application,'static', 'dojoroot/dojo/dojo.js')}}" 
-       djConfig="parseOnLoad: true" >
-      </script>
-     <!-- Define local dojo code access -->  
+       djConfig="parseOnLoad: true, isDebug: true" >
+    </script>
+     <!-- Define local dojo code access -->
+     
+     
 
      <!-- Uri Parser Utility -->
-      <script type="text/javascript"  
+    <script type="text/javascript"  
        src="{{=URL(request.application,'static', 'parseuri.js')}}" >
-      </script>
+    </script>
 
-        <script type="text/javascript">
+    <script type="text/javascript">
             dojo.require("dijit.layout.ContentPane");
             dojo.require("dijit.layout.BorderContainer");
             dojo.require("dijit.form.TextBox");
+            dojo.require("dijit.form.CheckBox");
             dojo.require("dijit.Tooltip");
- 
-        </script>
+    </script>
 
-        <style type="text/css">
-            html, body { width: 100%; height: 100%; margin: 0; overflow:hidden; }
-            #borderContainer { width: 100%; height: 100%; }
-        </style>
+    <style type="text/css">
+	html, body { width: 100%; height: 100%; margin: 0; overflow:hidden; }
+	#borderContainer { width: 100%; height: 100%; }
+    </style>
   
-
     <link rel="shortcut icon"
 	  href="{{=URL(request.application,'static','favicon.ico')}}" 
 	  type="image/vnd.microsoft.icon">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     {{#------  require CSS and JS files for this page (read info in base.css) ------}}
     
-    <!-- include dogo libs & local stylesheets-->  
+    <!-- include dojo libs & local stylesheets-->  
     
     {{response.files.append(URL(request.application,'static','style.css'))}}
     {{response.files.append(URL(request.application,'static','demo.css'))}}
@@ -66,161 +67,146 @@
     {{include 'web2py_ajax.html'}}
       
 
-<script type="text/javascript">
-    function gettagsummary() { // 
-        dojo.xhrGet( { 
+    <script type="text/javascript">
+	function gettagsummary() { // 
+	    dojo.xhrGet( { 
+    
+	    url: "/gallery/search/gettagsummary.json",                
+	    handleAs: "json",
+	    timeout: 5000, // Time in milliseconds
+		    
+	    // The LOAD function will be called on a successful response.
+	    load: function(response, ioArgs) { //
+	    dojo.byId("tagsummary").innerHTML = '';   
+    
+	    //process the response  
+	    var itags = response.tagsummary; 
+	    for (var x=0; x< itags.length; x++){
+		dojo.byId("tagsummary").innerHTML += '<li>' + itags[x].name +'; '  + itags[x].count + '</li>';    
+	    }
+     
+	    return response;  
+	    },
+    
+	    // The ERROR function will be called in an error case.
+	    error: function(response, ioArgs) { // 
+	      console.error("HTTP status code: ", ioArgs.xhr.status); //
+	      dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
+	      return response; // 
+	      },
+	      
+	     });
+	  }
+    </script>
 
-        url: "/gallery/search/gettagsummary.json",                
-        handleAs: "json",
-        timeout: 5000, // Time in milliseconds
- 		
-        // The LOAD function will be called on a successful response.
-        load: function(response, ioArgs) { //
-        dojo.byId("tagsummary").innerHTML = ''; 
+    <script type="text/javascript">
+	function getbyname() { //
+    
+	  //alert ('getbyname');
+     
+	  dojo.xhrGet({ 
+	    // Find images by name
+	    // On return display thumbnails of matching images
+    
+	    // pass request to controller
+	    url: "/gallery/search/getnames",                
+	    handleAs: "text",
+	    timeout: 5000, // Time in milliseconds
+		    
+	    // The LOAD function will be called on a successful response.
+	    load: function(response, ioArgs) { //
+			// Search for the HTML tag with the ID "replace" and replace it with the answer of 
+			// of the server call
+	    dojo.byId("content").innerHTML = response;  
+    
+	    // Get count of matching results - why does this not work
+	    // var cnt = dojo.query('#albumlist img').length
+    
+	    return response; // 
+	    },
+    
+	    // The ERROR function will be called in an error case.
+	    error: function(response, ioArgs) { // 
+	      console.error("HTTP status code: ", ioArgs.xhr.status); //
+	      dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
+	      return response; // 
+	    },
+	      
+	    // Here you put the parameters to the server side program 
+	    content: {q: dojo.byId("djsearch").value }
+	     });
+	  }
+    </script>
 
-
-        //process the response  
-        var itags = response.tagsummary; 
-        for (var x=0; x< itags.length; x++){
-            //var z= 2;            
-            dojo.byId("tagsummary").innerHTML += '<li>' + itags[x].tag.name +'; '  + itags[x]._extra['COUNT(tagref.tag)' ]+ '</li>';    
-        }
-        
-        return response;  
-        },
-
-        // The ERROR function will be called in an error case.
-        error: function(response, ioArgs) { // 
-          console.error("HTTP status code: ", ioArgs.xhr.status); //
-          dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
-          return response; // 
-          },
-          
-        // Here you put the parameters (if applicable) to the server side program 
-        //content: {q: param }
-         });
-      }
-  </script>
-
-
-<script type="text/javascript">
-    function readFile() { // 
-      dojo.xhrGet( { 
-        // The following URL must match that used to test the server.
-        //url: "http://www.jnerlich.de/servlets/ReturnParameters", 
-
-        // pass request to controller - ??why need to specify app name here ??
-        url: "/gallery/search/getnames",                
-        handleAs: "text",
-        timeout: 5000, // Time in milliseconds
- 		
-        // The LOAD function will be called on a successful response.
-        load: function(response, ioArgs) { //
-		    // Search for the HTML tag with the ID "replace" and replace it with the answer of 
-		    // of the server call
-        dojo.byId("content").innerHTML = response; // 
-
-        // Add a dom element with results
-        //dojo.create('h1',innerHTML ='testtest', content );
-
-        var cnt = dojo.query('#albumlist img').length
-        dojo.create("h1", { 
-                innerHTML:  cnt + " Matching Image(s) Found"
-              }, albumlist, "before" );
-
-        return response; // 
-        },
-
-        // The ERROR function will be called in an error case.
-        error: function(response, ioArgs) { // 
-          console.error("HTTP status code: ", ioArgs.xhr.status); //
-          dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
-          return response; // 
-          },
-          
-        // Here you put the parameters to the server side program 
-        content: {q: dojo.byId("dojosearch").value }
-         });
-      }
-  </script>
-
-<script>
-
-  // allow for extension of addOnLoad in extended template
-  {{block addOnLoadBegin}}
-  dojo.addOnLoad(function() {
-              new dijit.Tooltip({
-                  connectId: 'dojosearch',
-                  label: "Search By Title!"
-               });
-
-              gettagsummary();
-  {{end}}
-
-  {{block addOnLoadEnd}}
-    });
-  {{end}}
-
-</script>
+    <script>
+    
+      // allow for extension of addOnLoad in extended template
+      //{{block addOnLoadBegin}}
+    
+      dojo.addOnLoad(function() {
+		  new dijit.Tooltip({
+		      connectId: 'dojosearch',
+		      label: "Search By Title!"
+		   });
+		  gettagsummary();
+	});
+    
+    </script>
 
 </head>
 
     <body class=" claro ">
-        <div class="flash">{{=response.flash or ''}}</div>
-        <div dojoType="dijit.layout.BorderContainer" design="headline" gutters="true"
+        <div class="flash">{{=response.flash or ''}}
+	</div>
+        
+	<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="true"
              liveSplitters="false" id="borderContainer">
 
             <div dojoType="dijit.layout.ContentPane" splitter="false" region="top" class="ez-box" id="header">
-            <h1>
-            <a href="">{{=response.title or 'response.title'}}</a>
-            </h1>            
-            <h2>
-	          {{=response.subtitle or 'response.subtitle'}}
-        	  </h2>
+		<h1><a href="">{{=response.title or 'response.title'}}</a></h1>            
+		<h2>{{=response.subtitle or 'response.subtitle'}}</h2>
             </div>
+	    
             <div dojoType="dijit.layout.ContentPane" splitter="false" region="leading"
             style="width: 200px;">
 
 	            <div class="ez-wr">
 	              <div class="ez-fl ez-negmx">
 	              
-                        <div class="ez-box" id="left_sidebar">
-                        {{block leftbar}}
-                            {{=MENU(response.menu,_class='sf-menu')}}
-                        {{end}}    
-                        </div>              
+			    <div class="ez-box" id="left_sidebar">
+				{{block leftbar}}
+				{{=MENU(response.menu,_class='sf-menu')}}
+				{{end}}    
+			    </div>              
 	              </div>
-              </div> 
+		    </div> 
             </div>
 
 
             <div dojoType="dijit.layout.ContentPane" splitter="false" region="center" class="ez-box" id="content">{{include}}
 
-             <!--This is the tag which will be replaced by the AJAX call  -->
-             <div id="reslist" style=""></div>
+                 <!--This is the tag which will be replaced by the AJAX call  -->
+                 <div id="reslist" style=""></div>
 
             </div>
 
             <div dojoType="dijit.layout.ContentPane" splitter="false" region="trailing"
             style="width: 200px;">
-            <script type="text/javascript">
-                var srch = dojo.byId ("dojosearch");
-                //?? Collision with Dojo Multi Selection  ??
-                dojo.connect(srch, "onchange", "readFile");
-                //dojo.connect(srch, "onchange", "");
-            </script>
-
-
+		<script type="text/javascript">
+		    var srch = dojo.byId ("djsearch");
+		    //?? Collision with Dojo Multi Selection  ??
+		    dojo.connect(srch, "onchange", "getbyname");
+		    //dojo.connect(srch, "onchange", "");
+		</script>
+              
               <b>Search</b>              
               <input dojoType="dijit.form.TextBox" name="dojosearch" value="Find"
-              trim="true" id="dojosearch" propercase="true" style="width: 6em">
+              trim="true" id="djsearch" propercase="true" style="width: 6em">
 
-              <p/>
+              <p></p>
               <b>Tag Summary</b>
-              <div id='tagsummary'>
-                                
-              </div>
- 
+              <div id='tagsummary'></div>
+              
             </div>
 
           <div dojoType="dijit.layout.ContentPane" splitter="false" region="bottom" 
@@ -228,10 +214,10 @@
           {{=T('Copyright')}} &#169; 2011 -
           {{=T('Powered by')}} <a href="http://www.web2py.com">web2py</a>
           {{try:}}{{=auth.navbar(action=URL(request.application,'default','user'))}}{{except:pass}}
-          | {{=A('admin',_href=URL('admin'))}} |
+          | {{=A('admin',_href=URL('admin','default','index'))}} |
           </div>
 
-      </div>
+	</div>
 
     </body>
 

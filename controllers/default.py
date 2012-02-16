@@ -29,7 +29,26 @@ def count():
     session.counter = (session.counter or 0) + 1
     return dict(counter=session.counter, now=request.now)
 
-   
+ 
+def getbytag():
+    '''
+        Return detail list of images matching selected tag
+    ''' 
+
+    if  request.args(0):
+        tagval = request.args(0)
+
+        images = db(db.tagref.tag==db.tag.id)(db.tag.id==tagval)(db.image.id==db.tagref.image).select(db.image.ALL)
+    else:
+        images = db(db.image.ALL).select()
+
+    # explicity specify the view
+    response.view = 'default/index.html'
+     
+    return dict(images=images)
+
+
+  
 def show_v0():
     # need to check for valid selection here
     # ??display error/redirect??
@@ -57,7 +76,9 @@ def show():
                        message='your comment is posted',
             next=URL(args=image.id))
     comments = db(db.comment.image_id==image.id).select()
-    return dict(image=image, comments=comments, form=form)
+    #return dict(image=image, comments=comments, form=form)
+    return dict(image=image, comments=comments)
+
 
 def showcss():
     """

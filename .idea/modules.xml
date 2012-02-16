@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/gallery.iml" filepath="$PROJECT_DIR$/.idea/gallery.iml" />
+      <module fileurl="file://$USER_HOME$/code_sandbox/dojodirs/localtest/.idea/localtest.iml" filepath="$USER_HOME$/code_sandbox/dojodirs/localtest/.idea/localtest.iml" />
+    </modules>
+  </component>
+</project>
+

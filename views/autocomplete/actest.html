@@ -1,0 +1,92 @@
+{{extend 'djbaselocal.html'}}
+
+<head>
+    <style type="text/css">
+        body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }
+    </style>
+
+    <script type="text/javascript">
+        dojo.require("dijit.form.FilteringSelect");
+        dojo.require("dijit.form.ComboBox");
+        dojo.require("dojo.data.ItemFileReadStore");
+    </script>
+
+    <style type="text/css">
+        #tags (position: relative;)
+        .tags (background: white; border: solid 1px #55A6C8;)
+        .tags DIV (padding: 2px 4px 2px 4px)
+    </style>
+
+    <script type="text/css">
+
+        $(function(){
+
+        $("select").multiselect({
+        multiple: false,
+        header: "Select an option",
+        noneSelectedText: "Select an Option",
+        selectedList: 1
+        });
+    </script>
+
+
+</head>
+
+
+<body id="test" onload="prettyPrint();">
+
+<h2>Basic Demos</h2>
+
+
+<h3>Basic</h3>
+<p>
+    <select title="Basic example" multiple="multiple" name="example-basic" size="5">
+
+<body id="test" onload="prettyPrint();" class="  claro ">
+
+<h3>JQuery AutoComplete Filter Select Test</h3>
+
+
+<pre class="prettyprint">
+$(function(){
+   $("select").multiselect();
+});
+</pre>
+
+<!--alert(dijit.byId('stateSelect').get('value'))"-->
+<form>
+    <input type="text" id="tagInput" name="tagInput" style="width: 250px" /><br/>
+
+    <div style="position: absolute" id="tags" class="tags">
+    </div>
+        <p>
+            <select title="Basic example" multiple="multiple" name="demo" size="5">
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+                <option value="option4">Option 4</option>
+                <option value="option5">Option 5</option>
+                <option value="option6">Option 6</option>
+                <option value="option7">Option 7</option>
+            </select>
+        </p>
+
+
+</form>
+
+<script type="text/javascript">
+    jQuery("#tagInput").keyup(function(){
+                    ajax('tagselector', ['tagInput'], 'tags')});
+</script>
+
+
+<!--<script>            -->
+<!--jQuery("#month").keyup(function(){-->
+      <!--ajax('month_selector', ['month'], 'suggestions')});-->
+<!--</script>-->
+
+
+</body>
+
+</html>
+

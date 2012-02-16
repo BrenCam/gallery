@@ -31,7 +31,11 @@ response.menu += [
     (T('Gallery - Dojo'), False, URL('default','index'), []),
     (T('AjaxSearch - Dojo'), False, URL('default','sendform'), []),
     (T('TagList'), False, URL('search','gettags'), []),
+    (T('CbxTest'), False, URL('search','cbxtest'), []),
+    (T('AutoComplete'), False, URL('autocomplete','actest'), []),
 
+    (T('combo'), False, URL('search','combo'), []),
+    (T('Errors'),False,URL('admin','default', 'errors/gallery'), []),
     (T('Admin'), False, URL('admin','default','index'), [])
 
     ]

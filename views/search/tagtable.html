@@ -1,0 +1,42 @@
+<div class="errorform">
+  <form name="myform" method="post">
+    <input name="CheckAll" value="{{=T('check all')}}" 
+     onclick="check()" type="button">
+    <input name="CheckAll" value="{{=T('uncheck all')}}" 
+     onclick="uncheck()" type="button">
+    <input value="{{=T('delete all checked')}}" type="submit"><br><br>
+    
+
+    <h3>{{=T('Select Tags to be Removed')}}</h3>
+    <p class="controls"><a class="button" href="{{=URL(args=[app, 'new'])}}"><span>list by exception</span></a></p>
+    <table class="sortable">
+      <thead>
+        <tr>
+    <th>{{=T("Remove")}}</th>
+    <th>{{=T("Tag")}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{for tag in taglist:}}
+        <tr>
+         <td><input type="checkbox" name="remove_{{=tagid}}"/></td>
+         <td>{{=tag['name']}}</td>
+        </tr>
+        {{pass}}
+      </tbody>
+    </table>
+
+    {{ pass }}
+  </form>
+</div>
+
+
+    function buildtagtable(taglist){
+          html = ""
+          
+          for (var x=0; x< itags.length; x++){
+            //var z= 2;            
+            dojo.byId("ctags").innerHTML +=  itags[x].name + '; ';    
+        }      
+                    
+    }

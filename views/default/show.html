@@ -1,15 +1,62 @@
 {{left_sidebar_enabled=right_sidebar_enabled=False}}
-{{extend 'dijitlayout.html'}}
+{{extend 'djbase.html'}}  
 
+<script  type="text/javascript" >
 
-<script type="text/javascript">
-    function getimgtags(param) { // 
-        dojo.xhrGet( { 
+  dojo.require("dijit.form.Button") ;
+  dojo.require("dijit.form.CheckBox") ;
+  dojo.require("dijit.form.TextBox") ;
+  dojo.require("dojo.NodeList-traverse");
+  dojo.require("dijit.form.FilteringSelect");
+  dojo.require("dojo.data.ItemFileReadStore");
 
+</script>
+
+<script language="JavaScript">
+    function autocomplete(param) {
         //alert ('make xhr request');
- 
-        url: "/gallery/search/getimgtags.json",                
-        handleAs: "json",
+        dojo.xhrGet({
+
+            // this request gets xml response containing a
+            // list of autocomplete tag matches
+            url: "/gallery/search/tagselect",
+            handleAs: "text",
+            timeout: 5000, // Time in milliseconds
+
+            // The LOAD function will be called on a successful response.
+            load: function(response, ioArgs) { //
+                // Search for the HTML tag with the ID "ctags" and replace it with the answer of
+                // of the server call
+                dojo.byId("suggestions").innerHTML = '';
+                var itags = response.imgtags;
+                dojo.byId("suggestions").innerHTML =  response;
+
+                return response; //
+            },
+
+            // The ERROR function will be called in an error case.
+            error: function(response, ioArgs) { //
+                console.error("HTTP status code: ", ioArgs.xhr.status); //
+                dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //
+                return response; //
+            },
+            // Here you put the parameters to the server side program
+            content: {tag: dojo.byId("Tags").value }
+        });
+    }
+</script>
+
+
+
+<script language="JavaScript">
+    function getimgtags(param) { 
+        //alert ('make xhr request');    
+        dojo.xhrGet({ 
+
+        // this request gets xml response containing a 
+        // table of tag values and checkboxes
+        url: "/gallery/search/getimgtagsastable",                
+        handleAs: "text",
         timeout: 5000, // Time in milliseconds
  		
         // The LOAD function will be called on a successful response.
@@ -17,16 +64,11 @@
 		    // Search for the HTML tag with the ID "ctags" and replace it with the answer of 
 		    // of the server call
         dojo.byId("ctags").innerHTML = ''; 
-
-        //{"imgtags": [{"name": "USA"}, {"name": "Places"}]} 
         var itags = response.imgtags; 
-        for (var x=0; x< itags.length; x++){
-            //var z= 2;            
-            dojo.byId("ctags").innerHTML +=  itags[x].name + '; ';    
-        }
-        //dojo.itags.forEach function (tag) {
-        //   dojo.byId("ctags").innerHTML +=  tag.name;  //'test' ;//tag.name + '; ';  
-        // } 
+        dojo.byId("ctags").innerHTML =  response;
+	
+	//? disconnect any checkboxes?
+	//djdisconnect();
 
         return response; // 
         },
@@ -37,19 +79,48 @@
           dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
           return response; // 
           },
-          
-        // Here you put the parameters to the server side program 
-        // need to get from url 
-        //content: {q: dojo.byId("dojosearch").value }
-        //dummy value for testing
+                  
+        content: {q: param }
 
-        //var uri = "http://some.server.org/somecontext/?foo=bar&foo=bar2&bit=byte";
-        //var uri = location;        
-        //var query = uri.substring(uri.indexOf("?") + 1, uri.length);      
-        //var queryObject = dojo.queryToObject(query);
+         });
+      }
+  </script>
 
-        //var param = dojo.queryToObject(location.search.substr(1));
-        //content: {q: dojo.queryToObject(location.search.substr(1))}
+<script language="JavaScript">
+    function removetags(param) { 
+        //alert ('make xhr request to remove image tags ');    
+        dojo.xhrGet({ 
+
+        // this request gets xml response containing a 
+        // table of tag values and checkboxes
+        url: "/gallery/search/removetags",                
+        handleAs: "text",
+        timeout: 5000, // Time in milliseconds
+ 		
+        // The LOAD function will be called on a successful response.
+        load: function(response, ioArgs) { //
+		// Search for the HTML tag with the ID "ctags" and replace it with the answer of
+		// of the server call
+        dojo.byId("ctags").innerHTML = ''; 
+        var itags = response.imgtags;
+
+        // need a callback fn here to
+        // refresh tag summary list
+        gettagsummary();
+
+        dojo.byId("ctags").innerHTML =  response;
+
+        return response; // 
+        },
+
+        // The ERROR function will be called in an error case.
+        error: function(response, ioArgs) { // 
+          console.error("HTTP status code: ", ioArgs.xhr.status); //
+          dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //  
+          return response; // 
+          },
+
+        //specify any calling params here in content section
         content: {q: param }
 
          });
@@ -57,28 +128,240 @@
   </script>
 
 
+<script language="JavaScript">
+    function assigntags(param) {
+        //alert ('make xhr request to remove image tags ');
+        dojo.xhrGet({
+
+            // this request gets xml response containing a
+            // table of tag values and checkboxes
+            url: "/gallery/search/assigntags",
+            handleAs: "text",
+            timeout: 5000, // Time in milliseconds
+
+            // The LOAD function will be called on a successful response.
+            load: function(response, ioArgs) { //
+                // Search for the HTML tag with the ID "ctags" and replace it with the answer of
+                // of the server call
+                dojo.byId("ctags").innerHTML = '';
+
+                // need a callback fn here to
+                // refresh tag summary list
+                gettagsummary();
+
+                // remove any pending 'suggestions' div (??empty or remove??)
+                dojo.byId("suggestions").innerHTML = '';
+                //dojo.byId("Tags").innerHTML = '';
+                dojo.byId("Tags").value = '';
+                dojo.byId("NewTags").value = '';
+
+                var itags = response.imgtags;
+                dojo.byId("ctags").innerHTML =  response;
+
+                return response; //
+            },
+
+            // The ERROR function will be called in an error case.
+            error: function(response, ioArgs) { //
+                console.error("HTTP status code: ", ioArgs.xhr.status); //
+                dojo.byId("content").innerHTML = 'Loading the resource from the server did not work'; //
+                return response; //
+            },
+
+            //specify any calling params here in content section
+            content: {q: param }
+
+        });
+    }
+</script>
+
+
+<script language="JavaScript">
+  function check(){
+    //# find all the checkbox elements
+    dojo.query('[type=\"checkbox\"]').forEach(function(node, index, arr){
+       //console.debug(node.innerHTML);
+       node.checked= true;
+       });
+  }
+
+  function uncheck(){
+    dojo.query('[type=\"checkbox\"]').forEach(function(node, index, arr){
+       //console.debug(node.innerHTML);
+       node.checked= false;
+    });
+  }
+  
+  function removechecked(){
+    // remove selected taags from image
+    // Create json obj and make ajax request
+    
+    //alert ('remove tags for  image ');
+    
+    var ary = new Array();
+    
+    // javascript  dojo code to extract checked items from the tag array
+    var nltr = dojo.query('tr > td > [value=\"on\"]');
+
+    nltr.forEach(function(node,index,arr) {
+	// climb the dom tree
+	if (node.checked) {	    
+		//tr = node.parentNode.parentNode;
+		// get  the text value matching the checked item
+        // 11/27/2011 - modifn for horizontal tag list
+        //tr = node.parent().prev();
+        txt = node.parentNode.previousSibling.textContent
+		//txt = tr.children[0].textContent;
+		console.log ('Checked Nodes:', txt);
+		ary.push(txt);
+		}
+	});
+    
+    //alert ('Checked Tag Count =' +  ary.length);
+    
+		
+//    specify 2 matching conditions (commas  delimited)		
+//    dojo.query('[type=\"checkbox\"], [value=\"on\"]').forEach(function(node, index, arr){
+//    dojo.query('[type=\"checkbox\"]').forEach(function(node, index, arr){
+//       console.debug(node.innerHTML);
+//       if (node.checked = true)  {
+//          ary.push(node.innerHTML);
+//	   need to get related table data element here (sibling/next)
+//	  pnode = node.prev();
+//       }
+//    });
+//    
+    
+    // get image id from uri	  
+    qobj = parseUri(location.href);	
+    imageid = qobj.file;
+
+    // create json object
+    var jstagobj = new Object;
+    jstagobj.imageid= imageid;
+    jstagobj.tags  = ary;
+    jsobj = dojo.toJson(jstagobj);
+    //JSON.stringify(jstagobj);
+
+    // Make xhr request to server
+    removetags(jsobj);
+    //});
+  }
+    
+  function djdisconnect(){
+
+    dojo.query('[type=\"checkbox\"]').forEach(function(node, index, arr){
+       //console.debug(node.innerHTML);
+       dojo.disconnect(node);
+    });
+  }
+
+  function prepareonetag(){
+      // submit a single tag - autocomplete version
+
+      //alert ('Prepare One Tag');
+
+      qobj = parseUri(location.href);
+      imageid = qobj.file;
+
+      //_onclick="jQuery('#tag').val('%s')" % k,
+
+      var jstagobj = new Object;
+      jstagobj.imageid= imageid;
+
+      //dojo.byId("ctags")
+      //var str = dojo.byId("suggestions").value;
+
+      var tagstr =dojo.byId("suggestions").children[0].innerHTML;
+      //alert ('Process Tag:' + str);
+      var ary = new Array();
+      ary.push(tagstr);
+      jstagobj.tags  = ary;
+      //jstagobj.tags  = suggestions.selected;
+      jsobj = dojo.toJson(jstagobj);
+      assigntags(jsobj);
+
+  }
+
+  function preparetags(){
+    // prepare assign tags request
+    // build json request object
+    // get image id from uri
+
+    //alert ('preparetags');
+    qobj = parseUri(location.href);
+    imageid = qobj.file;
+
+    // create json object
+    var ary = new Array();
+    var tval =   dojo.byId("NewTags").value
+
+    //validate array - remove blank entries
+    //bail out if empty array
+    ary = tval.split(",");
+
+    var ary3 = new Array();
+    dojo.forEach(ary, function(entry, i){
+      if (entry != ''){
+          // Trim string and check for possible duplicates here
+          tagstr = dojo.trim(entry);
+          if (dojo.indexOf(ary3,tagstr) == -1){
+              ary3.push(tagstr);
+          }
+      }
+    });
+
+
+    if (ary3.length == 0) {
+        alert ('No Tags Specified ')
+        return;
+    }
+
+    var jstagobj = new Object;
+    jstagobj.imageid= imageid;
+    jstagobj.tags  = ary3;
+    jsobj = dojo.toJson(jstagobj);
+      //JSON.stringify(jstagobj);
+      // Make xhr request to server
+    assigntags(jsobj);
+  }
+
+</script>
+
 <script type="text/javascript">
-  dojo.require("dijit.form.MultiSelect");
 
   dojo.addOnLoad(function() {
-
-               //retrieve image tags for current image
-               // alert (' Load proc....');
-               //var uri = "http://some.server.org/somecontext/?foo=bar&foo=bar2&bit=byte";
-               //var uri = "http://some.server.org/somecontext/?q=55";
-
-               var uri = location.href;   
-               //var q = dojo.queryToObject(location.href.search.substr(1)) ;    
-               //var query = uri.substring(uri.indexOf("?") + 1, uri.length);      
-               //var queryObject = dojo.queryToObject(query);
-
-               parseUri.options.strictMode = true;
-               qobj = parseUri(location.href);
-               
-               getimgtags(qobj.file);
-    });
+	  //Retrieve tags for current image		 
+	  parseUri.options.strictMode = true;
+	  qobj = parseUri(location.href);	
+	  getimgtags(qobj.file);
+      tagStore = new dojo.data.ItemFileReadStore(url="gallery/search/tagselectjson.json");
+  });
     
 </script>
+
+<style type="text/css">
+
+  .taglist td{
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom:1px;
+    padding-top:1px;
+
+   }
+
+  .taglist table{
+   border: solid black 1px;
+  }
+
+</style>
+
+<style>
+#suggestions { position: relative; }
+  .suggestions { background: white; border: solid 1px #55A6C8; }
+  .suggestions DIV { padding: 2px 4px 2px 4px; }
+</style>
+
 
 <h1>Image: {{=image.title}}</h1>
 <center>
@@ -86,29 +369,71 @@
      src="{{=URL('download', args=image.file)}}" />
 </center>
 
-<h3>Current Image Tags</h3>
-<div id='ctags'>
+<form>
 
-</id>
+<p></p>
+<fieldset style="border:1px solid #000; padding:5px; ">
+
+<legend><b>Assign Image Tags (max 5 tags per image)</b></legend>
 
 
-<h3>Assign Tags</h3>
-<select id="dynamic">
-</select>
-<p>
-    <button onClick="alert(dijit.byId('dynamic').attr('value'))">
-        Get Selected values
-    </button>
-</p>
+<table>
+    <tr>
+        <td><b>Current Tags:</b></td>
+        <td><div id='ctags'>
+        </div></td>
+    </tr>
 
-{{if len(comments):}}
-  <h3>Comments</h3>
-  {{for comment in comments:}}
-    <li>{{=comment.author}} says <i>{{=comment.body}}</i></li>
-  {{pass}}
-{{else:}}
-  <h3>No comments posted yet</h3>
-{{pass}}
-<br/>
-<h3>Post a comment</h3>
-{{=form}}
+    <tr>
+        <td><b>Add/Remove Tags:</b></td>
+        <td>
+            <button name="CheckAll"
+                    onclick="check()"  dojoType="dijit.form.Button" type="button">
+                Check All
+            </button>
+
+            <button name="UnCheckAll"
+                    onclick="uncheck()"  dojoType="dijit.form.Button" type="button">
+                Uncheck All
+            </button>
+
+            <button name="RemoveChecked"
+                    onclick="removechecked"  dojoType="dijit.form.Button" type="button">
+                Remove Checked
+            </button>
+        </td>
+    </tr>
+
+    <tr>
+        <div id="test" style="position: relative;">
+        <td><b>Assign Tag(s):</b></td>
+            <td>
+            <input dojoType="dijit.form.TextBox" style="width: 30em" propercase=true trim=true
+                   id="Tags" name="Tags" onChange="" onkeyup="autocomplete()">
+                <div style="position:  absolute;" id="suggestions" class="suggestions"></div>
+             </td>
+        </div>
+    </tr>
+
+    <tr>
+        <td><b>Create New Tag(s) (Authorized Users Only):</b></td>
+        <td>
+            <input dojoType="dijit.form.TextBox" style="width: 30em" propercase=true trim=true
+                   id="NewTags" name="NewTags" onChange="preparetags()" >
+        </td>
+     </tr>
+
+</table>
+
+    <div dojoType="dojo.data.ItemFileReadStore" jsId="tagStore" url="gallery/search/tagselectjson.json">
+    </div>
+    <input dojoType="dijit.form.FilteringSelect" value="" store="tagStore"
+           searchAttr="name" name="name" id="tagInput">
+
+
+</fieldset>
+
+</form>    
+
+
+
